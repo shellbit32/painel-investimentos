@@ -1,5 +1,9 @@
 package model;
 
+/*
+Haverá rotina de expurgo para esta tabela, que será executada mensalmente.
+ */
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -24,10 +28,4 @@ public class Telemetria {
     @NotNull(message = "Data e hora são obrigatórios")
     @Column(name = "data_hora", nullable = false)
     private LocalDateTime dataHora;
-
-    @Column(length = 20)
-    private String status;
-
-    @Column(name = "detalhes", columnDefinition = "TEXT")
-    private String detalhes;
 }

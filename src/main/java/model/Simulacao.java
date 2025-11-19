@@ -3,7 +3,8 @@ package model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import model.enums.TipoProdutoEnum;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,19 +23,10 @@ public class Simulacao {
     @Column(name = "produto_id", nullable = false)
     private Long produtoId;
 
-    @NotBlank(message = "Nome do produto é obrigatório")
-    @Column(name = "produto_nome", nullable = false)
-    private String produtoNome;
-
-    @NotNull(message = "Tipo do produto é obrigatório")
-    @Enumerated(EnumType.STRING)
-    @Column(name = "produto_tipo", nullable = false, length = 50)
-    private TipoProdutoEnum produtoTipo;
-
     @NotNull(message = "Valor investido é obrigatório")
     @DecimalMin(value = "0.0", message = "Valor investido deve ser maior que zero")
     @Column(name = "valor_investido", nullable = false)
-    private Double valorInvestido;
+    private BigDecimal valorInvestido;
 
     @NotNull(message = "Prazo em meses é obrigatório")
     @Min(value = 1, message = "Prazo deve ser pelo menos 1 mês")
@@ -44,7 +36,7 @@ public class Simulacao {
     @NotNull(message = "Valor final é obrigatório")
     @DecimalMin(value = "0.0", message = "Valor final deve ser maior que zero")
     @Column(name = "valor_final", nullable = false)
-    private Double valorFinal;
+    private BigDecimal valorFinal;
 
     @NotNull(message = "Rentabilidade efetiva é obrigatória")
     @DecimalMin(value = "0.0", message = "Rentabilidade efetiva deve ser maior ou igual a zero")

@@ -7,6 +7,9 @@ import model.enums.TipoProdutoEnum;
 import model.enums.TipoRiscoEnum;
 import model.enums.LiquidezEnum;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "produto")
 @Data
@@ -44,7 +47,7 @@ public class Produto {
     @NotNull(message = "Valor mínimo é obrigatório")
     @DecimalMin(value = "0.0", message = "Valor mínimo deve ser maior ou igual a zero")
     @Column(name = "valor_minimo", nullable = false)
-    private Double valorMinimo;
+    private BigDecimal valorMinimo;
 
     @NotNull(message = "Risco é obrigatório")
     @Enumerated(EnumType.STRING)
@@ -55,4 +58,9 @@ public class Produto {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private LiquidezEnum liquidez;
+
+    private Boolean ativo = true;
+
+    @Column(name = "data_inativacao")
+    private LocalDateTime dataInativacao;
 }
