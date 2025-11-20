@@ -2,6 +2,7 @@ package rest.resource;
 
 import dao.ProdutoDAO;
 import dao.SimulacaoDAO;
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -16,6 +17,7 @@ import util.DataUtil;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Path("/simulacoes")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -31,6 +33,7 @@ public class SimulacaoResource {
     @Inject
     private CalculadoraFinanceiraService calculadoraFinanceiraService;
 
+    @Authenticated
     @POST
     @Path("/simular-investimento")
     @Transactional
@@ -57,11 +60,18 @@ public class SimulacaoResource {
         return Response.ok(response).build();
     }
 
+    @Authenticated
     @GET
     public Response historico() {
-        return Response.ok().build();
+        List<Object[]> resultados = simulacaoDAO.buscarHistoricoSimulacoes();
+        List<HistoricoSimulacaoRealizadaDto> historico = resultados.stream()
+                .map(this::converterParaHistoricoDto)
+                .toList();
+
+        return Response.ok(historico).build();
     }
 
+    @Authenticated
     @GET
     @Path("/por-produto-dia")
     public Response valoresPorProdutoDia() {
@@ -108,5 +118,27 @@ public class SimulacaoResource {
         simulacao.setDataSimulacao(LocalDateTime.now());
 
         simulacaoDAO.inserir(simulacao);
+    }
+
+    private HistoricoSimulacaoRealizadaDto converterParaHistoricoDto(Object[] resultado) {
+        Long id = ((Number) resultado[0]).longValue();
+        Long clienteId = ((Number) resultado[1]).longValue();
+        String nomeProduto = (String) resultado[2];
+        BigDecimal valorInvestido = BigDecimal.valueOf(((Number) resultado[3]).doubleValue());
+        BigDecimal valorFinal = BigDecimal.valueOf(((Number) resultado[4]).doubleValue());
+        Integer prazoMeses = ((Number) resultado[5]).intValue();
+        LocalDateTime dataSimulacao = (LocalDateTime) resultado[6];
+
+        String dataFormatada = dataSimulacao.format(DateTimeFormatter.ofPattern(DataUtil.FORMATO_DATA_HORA));
+
+        return HistoricoSimulacaoRealizadaDto.builder()
+                .id(id)
+                .clienteId(clienteId)
+                .produto(nomeProduto)
+                .valorInvestido(valorInvestido)
+                .valorFinal(valorFinal)
+                .prazoMeses(prazoMeses)
+                .dataSimulacao(dataFormatada)
+                .build();
     }
 }

@@ -1,4 +1,4 @@
-package model.enums;
+package enums;
 
 public enum PerfilInvestidorEnum {
     CONSERVADOR("Perfil conservador com baixa movimentação e foco em liquidez e segurança."),

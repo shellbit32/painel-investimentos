@@ -5,6 +5,8 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import model.Simulacao;
 
+import java.util.List;
+
 /*
  DAO utilizando native query
  */
@@ -12,7 +14,7 @@ import model.Simulacao;
 public class SimulacaoDAO {
 
     @Inject
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public void inserir(Simulacao simulacao) {
         String query = """
@@ -30,5 +32,23 @@ public class SimulacaoDAO {
                 .setParameter("rentabilidadeEfetiva", simulacao.getRentabilidadeEfetiva())
                 .setParameter("dataSimulacao", simulacao.getDataSimulacao())
                 .executeUpdate();
+    }
+
+    public List<Object[]> buscarHistoricoSimulacoes() {
+        String query = """
+            SELECT
+                s.id,
+                s.cliente_id,
+                p.nome,
+                s.valor_investido,
+                s.valor_final,
+                s.prazo_meses,
+                s.data_simulacao
+            FROM simulacao s
+            INNER JOIN produto p ON s.produto_id = p.id
+            ORDER BY s.data_simulacao DESC
+            """;
+
+        return entityManager.createNativeQuery(query).getResultList();
     }
 }

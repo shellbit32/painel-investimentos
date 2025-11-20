@@ -3,9 +3,9 @@ package model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import model.enums.TipoProdutoEnum;
-import model.enums.TipoRiscoEnum;
-import model.enums.LiquidezEnum;
+import enums.TipoProdutoEnum;
+import enums.TipoRiscoEnum;
+import enums.LiquidezEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package model.enums;
+package enums;
 
 public enum LiquidezEnum {
     ALTA,    // D+0 ou D+1

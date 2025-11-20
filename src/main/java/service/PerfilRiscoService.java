@@ -8,7 +8,7 @@ import jakarta.inject.Inject;
 import model.Cliente;
 import model.Investimento;
 import model.Produto;
-import model.enums.TipoRiscoEnum;
+import enums.TipoRiscoEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
