@@ -11,6 +11,7 @@ import model.Produto;
 import model.Simulacao;
 import rest.dto.*;
 import service.CalculadoraFinanceiraService;
+import util.DataUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -50,7 +51,7 @@ public class SimulacaoResource {
         ResponseSimulacaoInvestimentoDto response = ResponseSimulacaoInvestimentoDto.builder()
                 .produtoValidado(produtoValidado)
                 .resultadoSimulacao(resultadoSimulacao)
-                .dataSimulacao(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
+                .dataSimulacao(LocalDateTime.now().format(DateTimeFormatter.ofPattern(DataUtil.FORMATO_DATA_HORA)))
                 .build();
 
         return Response.ok(response).build();
