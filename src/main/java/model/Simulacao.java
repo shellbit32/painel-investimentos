@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class Simulacao {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull(message = "ID do cliente é obrigatório")

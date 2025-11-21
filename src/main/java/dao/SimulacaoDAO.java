@@ -17,13 +17,16 @@ public class SimulacaoDAO {
     private EntityManager entityManager;
 
     public void inserir(Simulacao simulacao) {
+        Long nextId = obterProximoId();
+
         String query = """
             INSERT INTO simulacao
-            (cliente_id, produto_id, valor_investido, prazo_meses, valor_final, rentabilidade_efetiva, data_simulacao)
-            VALUES (:clienteId, :produtoId, :valorInvestido, :prazoMeses, :valorFinal, :rentabilidadeEfetiva, :dataSimulacao)
+            (id, cliente_id, produto_id, valor_investido, prazo_meses, valor_final, rentabilidade_efetiva, data_simulacao)
+            VALUES (:id, :clienteId, :produtoId, :valorInvestido, :prazoMeses, :valorFinal, :rentabilidadeEfetiva, :dataSimulacao)
             """;
 
         entityManager.createNativeQuery(query)
+                .setParameter("id", nextId)
                 .setParameter("clienteId", simulacao.getClienteId())
                 .setParameter("produtoId", simulacao.getProdutoId())
                 .setParameter("valorInvestido", simulacao.getValorInvestido())
@@ -32,6 +35,25 @@ public class SimulacaoDAO {
                 .setParameter("rentabilidadeEfetiva", simulacao.getRentabilidadeEfetiva())
                 .setParameter("dataSimulacao", simulacao.getDataSimulacao())
                 .executeUpdate();
+
+        simulacao.setId(nextId);
+    }
+
+    private Long obterProximoId() {
+        String selectSeqQuery = "SELECT next_val FROM simulacao_SEQ";
+        Long seqValue = ((Number) entityManager.createNativeQuery(selectSeqQuery).getSingleResult()).longValue();
+
+        String selectMaxQuery = "SELECT COALESCE(MAX(id), 0) FROM simulacao";
+        Long maxId = ((Number) entityManager.createNativeQuery(selectMaxQuery).getSingleResult()).longValue();
+
+        Long nextId = Math.max(seqValue, maxId + 1);
+
+        String updateQuery = "UPDATE simulacao_SEQ SET next_val = :nextVal";
+        entityManager.createNativeQuery(updateQuery)
+                .setParameter("nextVal", nextId + 1)
+                .executeUpdate();
+
+        return nextId;
     }
 
     public List<Object[]> buscarHistoricoSimulacoes() {
@@ -40,8 +62,8 @@ public class SimulacaoDAO {
                 s.id,
                 s.cliente_id,
                 p.nome,
-                s.valor_investido,
-                s.valor_final,
+                CAST(s.valor_investido AS REAL),
+                CAST(s.valor_final AS REAL),
                 s.prazo_meses,
                 s.data_simulacao
             FROM simulacao s

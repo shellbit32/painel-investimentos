@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 public class Produto {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotBlank(message = "Nome do produto é obrigatório")

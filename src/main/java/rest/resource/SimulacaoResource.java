@@ -124,12 +124,10 @@ public class SimulacaoResource {
         Long id = ((Number) resultado[0]).longValue();
         Long clienteId = ((Number) resultado[1]).longValue();
         String nomeProduto = (String) resultado[2];
-        BigDecimal valorInvestido = BigDecimal.valueOf(((Number) resultado[3]).doubleValue());
-        BigDecimal valorFinal = BigDecimal.valueOf(((Number) resultado[4]).doubleValue());
+        BigDecimal valorInvestido = new BigDecimal(resultado[3].toString()).setScale(2);
+        BigDecimal valorFinal = new BigDecimal(resultado[4].toString()).setScale(2);
         Integer prazoMeses = ((Number) resultado[5]).intValue();
         LocalDateTime dataSimulacao = (LocalDateTime) resultado[6];
-
-        String dataFormatada = dataSimulacao.format(DateTimeFormatter.ofPattern(DataUtil.FORMATO_DATA_HORA));
 
         return HistoricoSimulacaoRealizadaDto.builder()
                 .id(id)
@@ -138,7 +136,7 @@ public class SimulacaoResource {
                 .valorInvestido(valorInvestido)
                 .valorFinal(valorFinal)
                 .prazoMeses(prazoMeses)
-                .dataSimulacao(dataFormatada)
+                .dataSimulacao(dataSimulacao.toString())
                 .build();
     }
 }

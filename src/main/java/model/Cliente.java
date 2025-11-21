@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class Cliente {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Min(value = 0, message = "Pontuação de risco deve ser no mínimo 0")
